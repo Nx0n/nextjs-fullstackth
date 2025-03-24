@@ -10,7 +10,7 @@ export default async function Page() {
   console.log(data)
   return (
     <div>
-      <h1>Attractions</h1><br></br>
+      <h1>Hello Attractions</h1><br></br>
       <ul>
         <h3>
         {data.map(attraction => (
