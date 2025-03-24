@@ -1,24 +1,44 @@
 import React from 'react'
+import { 
+  Container, Card, CardActions, CardContent, CardMedia, Button, Typography
+} from '@mui/material';
 
 export async function getData(id) {
-  const res = await fetch(`https://melivecode.com/api/attractions/${id}`)
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/attractions/${id}/`)
+  if (!res.ok) {
+    throw new Error('Failed to fetch data')
+  }
   return res.json()
 }
 
-
-export default async function Page({ params }) {
-    const id = params.id
-    const data = await getData(id)
-    console.log(data)
+export default async function page({ params }) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    return null
+  }
+  const id = params.id
+  const data = await getData(id)
+  console.log(data.length)
   return (
-    <div>
-        <h1><p>{data.attraction.name}</p></h1><br></br>
-        <div>
-            <img src={data.attraction.coverimage} alt={data.attraction.name} />           
-        </div>
-<br></br>
-           <h3><p>{data.attraction.detail}</p></h3>
-          
-    </div>
+    <Container maxWidth="md" sx={{ mt: 2 }}>
+      { data.length > 0 &&
+        <Card>
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              {data[0].name}
+            </Typography>
+          </CardContent>
+          <CardMedia
+            sx={{ height: 400 }}
+            image={data[0].coverimage}
+            title={data[0].name}
+          />
+          <CardContent>
+            <Typography variant="body2" color="text.secondary">
+              {data[0].detail}
+            </Typography>
+          </CardContent>
+        </Card>
+      }
+    </Container>
   )
 }
